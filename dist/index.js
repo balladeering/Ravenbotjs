@@ -1,48 +1,69 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const discord_js_1 = require("discord.js");
-const config_1 = tslib_1.__importDefault(require("./config"));
-const commands_1 = tslib_1.__importDefault(require("./commands"));
-const { intents, prefix, token } = config_1.default;
-const client = new discord_js_1.Client({
-    intents,
-    presence: {
-        status: 'online',
-        activities: [{
-                name: `${prefix}help`,
-                type: 'LISTENING'
-            }]
-    }
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
+var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __reExport = (target, module2, copyDefault, desc) => {
+  if (module2 && typeof module2 === "object" || typeof module2 === "function") {
+    for (let key of __getOwnPropNames(module2))
+      if (!__hasOwnProp.call(target, key) && (copyDefault || key !== "default"))
+        __defProp(target, key, { get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable });
+  }
+  return target;
+};
+var __toCommonJS = /* @__PURE__ */ ((cache) => {
+  return (module2, temp) => {
+    return cache && cache.get(module2) || (temp = __reExport(__markAsModule({}), module2, 1), cache && cache.set(module2, temp), temp);
+  };
+})(typeof WeakMap !== "undefined" ? /* @__PURE__ */ new WeakMap() : 0);
+var __publicField = (obj, key, value) => {
+  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  return value;
+};
+
+// src/index.ts
+var src_exports = {};
+__export(src_exports, {
+  AsyncQueue: () => AsyncQueue
 });
-client.on('ready', () => {
-    console.log(`Logged in as: ${client.user?.tag}`);
+
+// src/lib/AsyncQueue.ts
+var AsyncQueue = class {
+  constructor() {
+    __publicField(this, "promises", []);
+  }
+  get remaining() {
+    return this.promises.length;
+  }
+  wait() {
+    const next = this.promises.length ? this.promises[this.promises.length - 1].promise : Promise.resolve();
+    let resolve;
+    const promise = new Promise((res) => {
+      resolve = res;
+    });
+    this.promises.push({
+      resolve,
+      promise
+    });
+    return next;
+  }
+  shift() {
+    const deferred = this.promises.shift();
+    if (typeof deferred !== "undefined")
+      deferred.resolve();
+  }
+};
+__name(AsyncQueue, "AsyncQueue");
+module.exports = __toCommonJS(src_exports);
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  AsyncQueue
 });
-client.on('messageCreate', async (message) => {
-    if (message.author.bot)
-        return;
-    if (message.content.startsWith(prefix)) {
-        const args = message.content.slice(prefix.length).split(' ');
-        const command = args.shift();
-        switch (command) {
-            case 'ping':
-                const msg = await message.reply('Pinging...');
-                await msg.edit(`Pong! The round trip took ${Date.now() - msg.createdTimestamp}ms.`);
-                break;
-            case 'say':
-            case 'repeat':
-                if (args.length > 0)
-                    await message.channel.send(args.join(' '));
-                else
-                    await message.reply('You did not send a message to repeat, cancelling command.');
-                break;
-            case 'help':
-                const embed = (0, commands_1.default)(message);
-                embed.setThumbnail(client.user.displayAvatarURL());
-                await message.channel.send({ embeds: [embed] });
-                break;
-        }
-    }
-});
-client.login(token);
 //# sourceMappingURL=index.js.map
