@@ -24,7 +24,7 @@
 
 #### Reporting a Vulnerability
 
->  Email petitechat06@icloud.com OR message Angeldevil#0001 on [Discord]() to report any vulnerabilities.
+>  Message Angeldevil#0001 on Discord to report any vulnerabilities.
 
 ***
 
@@ -33,5 +33,6 @@
 #### Sorted by most recent.
 
 > `FRI, MAY 27th, 2023` Working on bot's online presence.
+
 
 > `THU, MAY 26th, 2023` Currently, this bot is in its development stage. Commands may be buggy.
